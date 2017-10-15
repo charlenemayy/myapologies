@@ -1,0 +1,112 @@
+.5 Add textures to images directory
+
+1. Create board.
+
+	var Colors = ['white','black'];
+	var squaretiles = [];
+	var board;
+	function createChessBoard()
+	{
+		var SquareWidth = 24, SquareHeight = 24;
+		
+		// Load the two textures.
+		var DarkTexture = THREE.ImageUtils.loadTexture('images/DarkSquare.png');
+		var LightTexture = THREE.ImageUtils.loadTexture('images/LightSquare.png');
+		
+		var SquareGeo = new THREE.BoxGeometry( SquareWidth, SquareHeight, 1 );
+		
+		board = new THREE.Object3D();
+
+		for( var row=0; row<8; row++ )
+		{
+			var alternate = ( row + 1 ) & 1;
+			for( var col=0; col<8; col++ )
+			{
+				var mesh;
+				if( alternate == 0 )
+				{
+					var LightSquareMat = new THREE.MeshLambertMaterial({map:LightTexture});
+					mesh = new THREE.Mesh( SquareGeo, LightSquareMat );
+				}
+				else
+				{
+					var DarkSquareMat = new THREE.MeshLambertMaterial({map:DarkTexture});
+					mesh = new THREE.Mesh( SquareGeo, DarkSquareMat );
+				}
+				alternate ^= 1;
+				mesh.position.x = -( SquareWidth * 3.5 ) + col * SquareWidth;
+				mesh.position.y = -( SquareHeight * 3.5 ) + row * SquareHeight;
+				
+				mesh.name = "Row" + row + "-Col" + col + "-Color" + Colors[alternate];
+				squaretiles.push( mesh );
+				board.add( mesh );
+			}
+		}
+		
+		scene.add( board );
+	}
+
+1.5 Call createChessBoard()
+
+		createChessBoard();
+
+1.75 Get the correct rotation
+
+		board.rotation.x = -(Math.PI/2);
+
+2. Add restoreAllBoardColors
+
+	var selectedSquare = null;
+	function restoreAllBoardColors()
+	{
+		for( var i=0; i<64; i++ )
+		{
+			squaretiles[i].material.color.set( 0xffffff );
+		}
+	}
+
+3. Refactor onMouseMove
+
+		var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+		projector.unprojectVector( vector, camera );
+		raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
+			
+		if( selectedobject != null )
+		{
+			var intersects = raycaster.intersectObject( plane );
+			selectedobject.position.copy( intersects[0].point );
+		}
+
+4. Add square detection code to onMouseMove
+
+		var intersects = raycaster.intersectObjects( scene.children, true );
+		if ( intersects.length > 0 )
+		{
+			// Look for squares that we need to highlight.
+			for( var i=0; i<intersects.length; i++ )
+			{
+				var obj = intersects[i].object;
+				var name = obj.name;
+				if( name.indexOf( "-Color" ) >= 0 )
+				{
+					var row = name.substring( 3, 4 );
+					var col = name.substring( 8, 9 );
+					var square = parseInt( row ) * 8 + parseInt( col );
+					if( square == selectedSquare )
+					{
+						break;
+					}
+					else
+					{
+						restoreAllBoardColors();
+						obj.material.color.set( 0xff00ff );
+						selectedSquare = square;
+						break;
+					}
+				}
+			}
+		}
+		else if( selectedSquare >= 0 )
+		{
+			restoreAllBoardColors();
+		}
