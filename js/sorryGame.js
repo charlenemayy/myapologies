@@ -25,6 +25,14 @@
 		addSpotLight();
 		addPlane();
 
+		// Dummy cube
+        var geo = new THREE.BoxGeometry( 10, 10, 10 );
+        var mat = new THREE.MeshPhongMaterial({color: 'pink'});
+        var dummycube = new THREE.Mesh( geo, mat );
+
+        dummycube.position.set(0, 10, 10);
+        scene.add(dummycube);
+
 		// Output to the stream
 		document.body.appendChild( renderer.domElement );
 		
@@ -57,13 +65,25 @@
 	}
 	
 	function addSpotLight()
-	{
-        spotLight = new THREE.SpotLight( 0xffffff, 1 );
-        spotLight.position.set( 0, 300, 0 );
+	{	
+		// y = up & down
+		// z = forward & backward
+        spotLight = new THREE.SpotLight( 0xffffff, .5 );
+        spotLight.position.set( 0, 300, 200 );
         spotLight.shadowCameraNear = 1;
         spotLight.shadowCameraFar = 50;
         spotLight.castShadow = true;
         scene.add(spotLight);
+
+        spotLight2 = new THREE.SpotLight( 0xffffff, .5 );
+        spotLight2.position.set( 0, 300, -200 );
+        spotLight2.shadowCameraNear = 1;
+        spotLight2.shadowCameraFar = 50;
+        spotLight2.castShadow = true;
+        scene.add(spotLight2);
+
+        ambientlight = new THREE.AmbientLight(0xbababa);
+        scene.add(ambientlight);
 	}
 	
 	window.onload = init;
@@ -190,7 +210,6 @@
 		camera.position.z = -250;
 		camera.lookAt(new THREE.Vector3(0,0,0));
 	} */
-
 	
 	function setupRenderer()
 	{
