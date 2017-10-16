@@ -40,7 +40,6 @@
 	
 	function render()
 	{
-		
 		if( Key.isDown(Key.A))
 		{
 			board.rotation.x -= 0.1;
@@ -175,12 +174,23 @@
 	
 	function setupCamera()
 	{
-		camera = new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,1000);
+		camera = new THREE.PerspectiveCamera(45 ,window.innerWidth/window.innerHeight,0.1,1000);
 		camera.position.x = 0;
-		camera.position.y = 375;
-		camera.position.z = -100;
+		camera.position.y = 200;
+		camera.position.z = -250;
 		camera.lookAt(new THREE.Vector3(0,0,0));
 	}
+
+	// Original camera controls
+	/* function setupCamera()
+	{
+		camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+		camera.position.x = 0;
+		camera.position.y = 200;
+		camera.position.z = -250;
+		camera.lookAt(new THREE.Vector3(0,0,0));
+	} */
+
 	
 	function setupRenderer()
 	{
@@ -194,7 +204,7 @@
 	{	
 		var texture = new THREE.ImageUtils.loadTexture("images/sorryboard.jpg");
 		plane = new THREE.Mesh(new THREE.PlaneGeometry(24*16, 24*16, 10, 10), new THREE.MeshBasicMaterial({transparent: false, map: texture,opacity: 0.0}));
-		plane.position.z = .5;
+		plane.position.z = 60;
 		plane.rotation.x = -(Math.PI/2);
 		plane.name = "Plane";
 		scene.add( plane );
@@ -217,13 +227,22 @@
 		
 	}
 
+	// Error probably results from translation of mouse location to vector in 3d space
+	// Changing camera changes the mouse position needed to select object
+
 	var x,y,z;
 	function onDocumentMouseDown( event ) 
-	{
+	{	
+		// Prevent default action for mouse down
 		event.preventDefault();
 		
+		// Stores mouse location
 		var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
-		projector.unprojectVector( vector, camera );
+		console.log('mouse position:' + mouse.x + ', ' + mouse.y);
+
+		// Uses camera projection matrix to transform into 3D space
+		projector.unprojectVector( vector, camera ); // ??? Shouldn't it automatically adapt to new camera position
+
 		raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
 
 		var intersects = raycaster.intersectObjects( scene.children, true );
