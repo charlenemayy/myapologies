@@ -93,7 +93,7 @@
 		for( var i=0; i<8; i++ )
 		{
 			loadPiece('pawn','',i);
-			loadPiece('pawn','w',i+16);
+			loadPiece('pawn','y',i+16);
 			loadPiece(piecesToLoad[i],'',i+8);
 			loadPiece(piecesToLoad[i],'w',i+24);
 		}
