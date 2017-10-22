@@ -3,6 +3,8 @@
 	var camera;
 	var plane;
 
+	const RAD = Math.PI / 180; // Degree to radian conversion
+
 	var mouse = new THREE.Vector2();
 	var selectedobject = null;
 	
@@ -32,14 +34,6 @@
 		addSpotLight();
 		addPlane();
 
-		// Dummy cube
-        var geo = new THREE.BoxGeometry( 10, 10, 10 );
-        var mat = new THREE.MeshPhongMaterial({color: 'pink'});
-        var dummycube = new THREE.Mesh( geo, mat );
-
-        dummycube.position.set(0, 10, 10);
-        scene.add(dummycube);
-
 		// Output to the stream
 		document.body.appendChild( renderer.domElement );
 		
@@ -48,7 +42,8 @@
 		renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
 		
 		loadPieces();
-		//shuffleCards();
+		createCards();
+		shuffleCards();
 		
 		// Call render
 		render();
@@ -225,6 +220,44 @@
 			scene.add( pieceList[i+12] );
 			scene.add( pieceList[i+14] );
 		}	
+	}
+
+	function createCards()
+	{
+		var geo = new THREE.BoxGeometry( 30, 10, 50 );
+        var mat = new THREE.MeshPhongMaterial({color: 'blue'});
+        var cards = new THREE.Mesh( geo, mat );
+
+        cards.position.set(39, 5, 21);
+        cards.rotation.y = 45 * RAD;
+
+        cards.name = "Card Stack"
+        console.log(cards.name)
+
+        scene.add(cards);
+	}
+
+	function shuffleCards()
+	{
+		var curIndex = cardValues.length, temp, n;
+
+		// While there remain elements to shuffle...
+		while (0 !== curIndex) {
+
+			// Pick a remaining element...
+			n = Math.floor(Math.random() * curIndex);
+			curIndex -= 1;
+
+			// And swap it with the current element.
+			temp = cardValues[curIndex];
+			cardValues[curIndex] = cardValues[n];
+			cardValues[n] = temp;
+		}
+
+		/*
+		for(i = 0; i < 45; i++)
+			console.log(cardValues[i]);
+		*/
 	}
 	
 	function setupCamera()
