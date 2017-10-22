@@ -78,3 +78,76 @@ var curMove;
 
 		index++;
 	}
+
+	var movelist = [];
+	function getLegalMoves( piece )
+	{
+
+		// Get location from piece value
+		console.log('piece: ' + piece)
+		var spot = piecePosition[piece];
+
+		movelist = [];
+
+		// Legal moves depend on the current card drawn
+		switch(curMove)
+		{
+			case 1:
+				switch(spot)
+				{	
+					// Piece is below its safety zone
+					case 2:
+						// Green 
+						if(piece >= 4 && piece < 8)
+							movelist.push(64);
+						else
+							movelist.push(spot + 1);
+						break;
+					case 17:
+						// Red
+						if(piece >= 0 && piece < 4)
+							movelist.push(71);
+						else
+							movelist.push(spot + 1);
+						break;
+					case 32:
+						// Blue
+						if(piece >= 8 && piece < 12)
+							movelist.push(76);
+						else
+							movelist.push(spot + 1);
+						break;
+					case 47:
+						// Yellow
+						if(piece >= 12 && piece < 16)
+							movelist.push(81);
+						else
+							movelist.push(spot + 1);
+						break;
+
+					// Piece is in start
+					case 60:
+						movelist.push(4);
+						break;
+					case 61:
+						movelist.push(19);
+						console.log('its red')
+						break;
+					case 62:	
+						movelist.push(34);
+						console.log('its blue')
+						break;
+					case 63:
+						movelist.push(49);
+						console.log('its yellow')
+						break;
+
+					// Every other spot
+					default:
+						movelist.push(spot + 1);
+						break;
+				}
+
+			break;
+		}
+	}

@@ -15,6 +15,9 @@
 	var pieceList = [null,null,null,null,null,null,null,null,
 			 null,null,null,null,null,null,null,null];
 
+	// List of piece locations
+	var piecePosition = [61,61,61,61,60,60,60,60,62,62,62,62,63,63,63,63]
+
 	// 45 cards total
 	var cardValues = [1,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,
 			 5,5,5,5,7,7,7,7,8,8,8,8,10,10,10,10,
@@ -99,100 +102,136 @@
 	{
 		var geo = new THREE.CylinderGeometry( 8, 8, 1, 200 );
 		var largegeo = new THREE.CylinderGeometry( 27, 27, 1, 200 );
-        var mat = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
         
-        // Vertical lines
+        // Vertical spots
         for(var i = 0; i < 16; i++)
         {	
+        	var mat = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
         	var circle1 = new THREE.Mesh( geo, mat );
+
         	circle1.position.set(174.5, .5, -115.5 + (PIECESPACE * i));
+        	circle1.name = "Spot"+i;
         	scene.add(circle1);
         	spotList[i] = circle1;
 
-        	var circle2 = new THREE.Mesh( geo, mat );
+        	var mat2 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
+        	var circle2 = new THREE.Mesh( geo, mat2 );
+
         	circle2.position.set(-174.5, .5, 233.25 - (PIECESPACE * i));
+        	circle2.name = "Spot" + (i+30);
         	scene.add(circle2);
-        	spotLight[i+30] = circle2;
+        	spotList[i+30] = circle2;
         }
 
+        // Horizontal spots
         for(var i = 0; i < 14; i++)
-        {
+        {	
+        	var mat = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
         	var circle1 = new THREE.Mesh( geo, mat );
         	circle1.position.set(151.25 - (PIECESPACE * i), .5, 233.25);
+        	circle1.name = "Spot" + (i+16);
         	scene.add(circle1);
         	spotList[i+16] = circle1;
 
+        	var mat1 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
         	var circle2 = new THREE.Mesh( geo, mat );
         	circle2.position.set(-151.25 + (PIECESPACE * i), .5, -115.5);
+        	circle2.name = "Spot" + (i+46);
         	scene.add(circle2);
-        	spotLight[i+46] = circle2;
+        	spotList[i+46] = circle2;
         }
 
+        // Initialize safety zones
+        for(var i = 0; i < 5; i++)
+        {	
+        	var mat1 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
+        	var circle = new THREE.Mesh( geo, mat1 );
+        	circle.position.set(151.25 - (PIECESPACE * i), .5, -69);
+        	circle.name = "Spot" + (i+64);
+        	scene.add(circle);
+        	spotList[i+64] = circle;
+
+        	var mat2 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
+        	var circle1 = new THREE.Mesh( geo, mat2 );
+        	circle1.position.set(128, .5, 210 - (PIECESPACE * i));
+        	circle1.name = "Spot" + (i+70);
+        	scene.add(circle1);
+        	spotList[i+70] = circle1;
+
+        	var mat3 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
+        	var circle2 = new THREE.Mesh( geo, mat3 );
+        	circle2.position.set(-151.25 + (PIECESPACE * i), .5, 186.75);
+        	circle2.name = "Spot" + (i+76);
+        	scene.add(circle2);
+        	spotList[i+76] = circle2;
+
+        	var mat4 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
+			var circle3 = new THREE.Mesh( geo, mat4 );
+        	circle3.position.set(-127.75, .5, -92 + (PIECESPACE * i));
+        	circle3.name = "Spot" + (i+81);
+        	scene.add(circle3);
+        	spotList[i+81] = circle3;
+        }
+
+
         // Initialize start zones
-        var largecircle = new THREE.Mesh(largegeo, mat);
+        var mat1 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
+        var largecircle = new THREE.Mesh(largegeo, mat1);
     	largecircle.position.set( 134, .5, -22 );
+    	largecircle.name = "Spot60-Start";
     	scene.add(largecircle);
     	spotList[60] = largecircle;
 
-    	var largecircle1 = new THREE.Mesh(largegeo, mat);
+    	var mat2 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
+    	var largecircle1 = new THREE.Mesh(largegeo, mat2);
     	largecircle1.position.set( 82, .5, 193 );
+    	largecircle1.name = "Spot61-Start";
     	scene.add(largecircle1);
     	spotList[61] = largecircle1;
 
-    	var largecircle2 = new THREE.Mesh(largegeo, mat);
+    	var mat3 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
+    	var largecircle2 = new THREE.Mesh(largegeo, mat3);
     	largecircle2.position.set( -133, .5, 139.5 );
+    	largecircle2.name = "Spot62-Start";
     	scene.add(largecircle2);
     	spotList[62] = largecircle2;
 
-    	var largecircle3 = new THREE.Mesh(largegeo, mat);
-    	largecircle3.position.set( -81.5, .5, -73.5 );
+    	var mat4 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
+    	var largecircle3 = new THREE.Mesh(largegeo, mat4);
+    	largecircle3.position.set( -81.5, 2, -73.5 );
+    	largecircle3.name = "Spot63-Start";
     	scene.add(largecircle3);
     	spotList[63] = largecircle3;
 
         // Initialize home zones
-    	var largecircle = new THREE.Mesh(largegeo, mat);
+        var mat5 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
+    	var largecircle = new THREE.Mesh(largegeo, mat5);
     	largecircle.position.set( 25, .5, -67.5 );
+    	largecircle.name = "Spot69-Home";
     	scene.add(largecircle);
     	spotList[69] = largecircle;
 
-    	var largecircle1 = new THREE.Mesh(largegeo, mat);
+    	var mat6 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
+    	var largecircle1 = new THREE.Mesh(largegeo, mat6);
     	largecircle1.position.set( 128, .5, 85 );
+    	largecircle1.name = "Spot75-Home";
     	scene.add(largecircle1);
     	spotList[75] = largecircle1;
 
-    	var largecircle2 = new THREE.Mesh(largegeo, mat);
+    	var mat7 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
+    	var largecircle2 = new THREE.Mesh(largegeo, mat7);
     	largecircle2.position.set( -24, .5, 185 );
+    	largecircle2.name = "Spot81-Home";
     	scene.add(largecircle2);
     	spotList[81] = largecircle2;
 
-    	var largecircle3 = new THREE.Mesh(largegeo, mat);
+		var mat8 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
+    	var largecircle3 = new THREE.Mesh(largegeo, mat8);
     	largecircle3.position.set( -127, .5, 35 );
+    	largecircle3.name = "Spot86-Home";
     	scene.add(largecircle3);
     	spotList[86] = largecircle3;
 
-        // Initialize safety zones
-        for(var i = 0; i < 5; i++)
-        {
-        	var circle = new THREE.Mesh( geo, mat );
-        	circle.position.set(151.25 - (PIECESPACE * i), .5, -69);
-        	scene.add(circle);
-        	spotList[i+64] = circle;
-
-        	var circle1 = new THREE.Mesh( geo, mat );
-        	circle1.position.set(128, .5, 233.25 - (PIECESPACE * i));
-        	scene.add(circle1);
-        	spotList[i+70] = circle1;
-
-        	var circle2 = new THREE.Mesh( geo, mat );
-        	circle2.position.set(-151.25 + (PIECESPACE * i), .5, 186.75);
-        	scene.add(circle2);
-        	spotList[i+76] = circle2;
-
-			var circle3 = new THREE.Mesh( geo, mat );
-        	circle3.position.set(-127.75, .5, -92 + (PIECESPACE * i));
-        	scene.add(circle3);
-        	spotList[i+81] = circle3;
-        }
 	}
 
 	function loadPieces()
@@ -276,8 +315,8 @@
 			pieceList[i+2].position.x = 70 + (i * PIECESPACE);
 			pieceList[i+2].position.z = 180 + PIECESPACE;
 			
-			pieceList[i].name = "StartPiece-Red" + i;
-			pieceList[i+2].name = "StartPiece-Red" + (i+2);
+			pieceList[i].name = "0" + i + "Piece-Red";
+			pieceList[i+2].name = "0" + (i+2) + "Piece-Red";
 
 			scene.add( pieceList[i] );
 			scene.add( pieceList[i+2] );
@@ -291,8 +330,8 @@
 			pieceList[i+6].position.x = 120 + (i * PIECESPACE);
 			pieceList[i+6].position.z = -33 + PIECESPACE;
 			
-			pieceList[i+4].name = "StartPiece-Green" + i;
-			pieceList[i+6].name = "StartPiece-Green" + (i+2);
+			pieceList[i+4].name = "0" + (i+4) + "Piece-Green";
+			pieceList[i+6].name = "0" + (i+6) + "Piece-Green";
 			scene.add( pieceList[i+4] );
 			scene.add( pieceList[i+6] );
 		}
@@ -305,8 +344,8 @@
 			pieceList[i+10].position.x = -142 + (i * PIECESPACE);
 			pieceList[i+10].position.z = 130 + PIECESPACE;
 			
-			pieceList[i+8].name = "StartPiece-Blue" + i;
-			pieceList[i+10].name = "StartPiece-Blue" + (i+2);
+			pieceList[i+8].name = "0" + (i+8) + "Piece-Blue";
+			pieceList[i+10].name = (i+10) + "Piece-Blue";
 			scene.add( pieceList[i+8] );
 			scene.add( pieceList[i+10] );
 		}
@@ -319,8 +358,8 @@
 			pieceList[i+14].position.x = -93 + (i * PIECESPACE);
 			pieceList[i+14].position.z = -84 + PIECESPACE;
 	
-			pieceList[i+12].name = "StartPiece-Yellow" + i;
-			pieceList[i+14].name = "StartPiece-Yellow" + (i+2);
+			pieceList[i+12].name = (i+12) + "Piece-Yellow";
+			pieceList[i+14].name = (i+14) + "Piece-Yellow";
 			scene.add( pieceList[i+12] );
 			scene.add( pieceList[i+14] );
 		}	
@@ -433,14 +472,14 @@
 
 		var intersects = raycaster.intersectObjects( scene.children, true );
 		if ( intersects.length > 0 )
-		{	
+		{				
 			// Identify object being picked up
 			for( var i=0; i<intersects.length; i++ )
 			{
 				var obj = intersects[i].object;
 				var name = obj.name;
 
-				console.log(name);
+			console.log(name)
 
 				if(name == 'Card Stack')
 				{
@@ -459,6 +498,22 @@
 						name = par.name;
 						obj = par;
 						selectedobject = obj;
+
+						// Get piece number from name
+						var str = name.substring( 0, 2 );
+						var piece = parseInt(str);
+
+						getLegalMoves(piece);
+
+						// Change color of spots
+						for( var j = 0; j < movelist.length; j++ )
+						{	
+							console.log(movelist[j]);
+							spotList[movelist[j]].material.transparent = false;
+							spotList[movelist[j]].material.color.set(0xff0000);
+						}
+
+						//check if on slide
 					}
 					else
 					{
@@ -471,16 +526,6 @@
 					return;
 				}				
 			}	
-
-			for( var i=0; i<intersects.length; i++ )
-			{
-				var obj = intersects[i].object;
-				var name = obj.name;
-
-				console.log(name)
-				
-
-			}
 		}		
 
 	}
