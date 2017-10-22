@@ -334,17 +334,26 @@
 
 		var intersects = raycaster.intersectObjects( scene.children, true );
 		if ( intersects.length > 0 )
-		{
+		{	
+			// Identify object being picked up
 			for( var i=0; i<intersects.length; i++ )
 			{
 				var obj = intersects[i].object;
 				var name = obj.name;
+
+				if(name == 'Card Stack')
+				{
+					console.log(name);
+				}
+
 				if( name.length == 0 )
 				{
 					var par = obj.parent;
 					name = par.name;
+
+					// Pawn Pieces
 					if( name == '' )
-					{
+					{	
 						par = par.parent;
 						name = par.name;
 						obj = par;
