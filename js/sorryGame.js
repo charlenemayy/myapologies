@@ -9,12 +9,19 @@
 	var raycaster = new THREE.Raycaster();
 	var projector = new THREE.Projector();
 	
+	// List of sorry pieces
 	var pieceList = [null,null,null,null,null,null,null,null,
-			 null,null,null,null,null,null,null,null,
-			 null,null,null,null,null,null,null,null,
 			 null,null,null,null,null,null,null,null];
 
-	var piecesToLoad = ['Rook','Knight','Bishop','King','Queen','Bishop','Knight','Rook'];
+	// 45 cards total
+	var cardValues = [1,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,
+			 5,5,5,5,7,7,7,7,8,8,8,8,10,10,10,10,
+			 11,11,11,11,12,12,12,12,13,13,13,13];
+
+	// Check if card is taken
+	var cardTaken = [false,false,false,false,false,false,false,false,false,
+			 false,false,false,false,false,false,false,false,false,
+			 false,false,false,false,false,false,false,false,false,];
 	
 	function init()
 	{
@@ -41,6 +48,7 @@
 		renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
 		
 		loadPieces();
+		//shuffleCards();
 		
 		// Call render
 		render();
@@ -90,17 +98,17 @@
 
 	function loadPieces()
 	{
-		for( var i=0; i<8; i++ )
+		for( var i=0; i<4; i++ )
 		{
-			loadPiece('pawn','',i);
-			loadPiece('pawn','y',i+16);
-			loadPiece(piecesToLoad[i],'',i+8);
-			loadPiece(piecesToLoad[i],'w',i+24);
+			loadPiece('pawn','r',i);
+			loadPiece('pawn','g',i+4);
+			loadPiece('pawn','b',i+8);
+			loadPiece('pawn','y',i+12);
 		}
 		setTimeout(waitForPiecesToLoad, 500);
 	}
 	
-	function loadPiece( modelname, white, index )
+	function loadPiece( modelname, color, index )
 	{
 		// instantiate a loader
 		var loader = new THREE.OBJMTLLoader();
@@ -111,7 +119,7 @@
 			'models/' + modelname + '.obj',
 
 			// MTL resource URL	
-			'models/' + modelname + white + '.mtl',
+			'models/' + modelname + color + '.mtl',
 			
 			// Function when both resources are loaded			// Function when both resources are loaded
 			function ( object ) 
@@ -135,7 +143,7 @@
 	function waitForPiecesToLoad()
 	{
 		var allloaded = true;
-		for( var i=0; i<32; i++ )
+		for( var i=0; i<16; i++ )
 		{
 			if( pieceList[i] == null )
 			{
@@ -155,41 +163,68 @@
 		}
 	}
 	
+	const PIECESPACE = 23.25;
 	function placePieces()
 	{
-	
-		for( var i=0; i<8; i++ )
+		// Position 0, 0 = (175, -21)
+		// Difference of 23.25
+		// X: left = larger value; right = smaller value
+		for( var i=0; i<2; i++ )
 		{
-			pieceList[i].position.x = -24 * 3 + i * 24 - 12;
-			pieceList[i].position.z = 24 * 3 - 12;
-			pieceList[i].name = "Piece-BlackPawn";
+			pieceList[i].position.x = 70 + (i * PIECESPACE);
+			pieceList[i].position.z = 180;
+
+			pieceList[i+2].position.x = 70 + (i * PIECESPACE);
+			pieceList[i+2].position.z = 180 + PIECESPACE;
+			
+			pieceList[i].name = "Piece-RedPawn";
+			pieceList[i+2].name = "Piece-RedPawn";
+
 			scene.add( pieceList[i] );
+			scene.add( pieceList[i+2] );
 		}
-		
-		for( var i=0; i<8; i++ )
+
+		for( var i=0; i<2; i++ )
 		{
-			pieceList[i+8].position.x = -24 * 3 + i * 24 - 12;
-			pieceList[i+8].position.z = 24 * 4 - 12;
-			pieceList[i+8].name = "Piece-Black" + piecesToLoad[i];
+			pieceList[i+4].position.x = 120 + (i * PIECESPACE);
+			pieceList[i+4].position.z = -33;
+
+			pieceList[i+6].position.x = 120 + (i * PIECESPACE);
+			pieceList[i+6].position.z = -33 + PIECESPACE;
+			
+			pieceList[i+4].name = "Piece-GreenPawn";
+			pieceList[i+6].name = "Piece-GreenPawn";
+			scene.add( pieceList[i+4] );
+			scene.add( pieceList[i+6] );
+		}
+
+		for( var i=0; i<2; i++ )
+		{
+			pieceList[i+8].position.x = -142 + (i * PIECESPACE);
+			pieceList[i+8].position.z = 130;
+
+			pieceList[i+10].position.x = -142 + (i * PIECESPACE);
+			pieceList[i+10].position.z = 130 + PIECESPACE;
+			
+			pieceList[i+8].name = "Piece-BluePawn";
+			pieceList[i+10].name = "Piece-BluePawn";
 			scene.add( pieceList[i+8] );
+			scene.add( pieceList[i+10] );
 		}
-		
-		for( var i=0; i<8; i++ )
+
+		for( var i=0; i<2; i++ )
 		{
-			pieceList[i+16].position.x = -24 * 3 + i * 24 - 12;
-			pieceList[i+16].position.z = -24 * 2 - 12;
-			pieceList[i+16].name = "Piece-WhitePawn";
-			scene.add( pieceList[i+16] );
-		}
-		
-		for( var i=0; i<8; i++ )
-		{
-			pieceList[i+24].position.x = -24 * 3 + i * 24 - 12;
-			pieceList[i+24].position.z = -24 * 3 - 12;
-			pieceList[i+24].name = "Piece-White" + piecesToLoad[i];
-			scene.add( pieceList[i+24] );
-		}
-		
+			pieceList[i+12].position.x = -93 + (i * PIECESPACE);
+			pieceList[i+12].position.z = -84;
+
+			pieceList[i+14].position.x = -93 + (i * PIECESPACE);
+			pieceList[i+14].position.z = -84 + PIECESPACE;
+	
+			pieceList[i+12].name = "Piece-YellowPawn";
+			pieceList[i+14].name = "Piece-YellowPawn";
+			scene.add( pieceList[i+12] );
+			scene.add( pieceList[i+14] );
+		}	
 	}
 	
 	function setupCamera()
