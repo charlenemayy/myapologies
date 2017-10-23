@@ -16,12 +16,7 @@
 			 null,null,null,null,null,null,null,null];
 
 	// List of piece locations
-	var piecePosition = [61,61,61,61,60,60,60,60,62,62,62,62,63,63,63,63]
-
-	// 45 cards total
-	var cardValues = [1,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,
-			 5,5,5,5,7,7,7,7,8,8,8,8,10,10,10,10,
-			 11,11,11,11,12,12,12,12,13,13,13,13];
+	var piecePosition = [61,61,61,61,55,5,60,60,62,62,62,62,45,55,63,63]
 
 	// Check if card is taken
 	var cardTaken = [false,false,false,false,false,false,false,false,false,
@@ -30,6 +25,9 @@
 
 	// Array of spots
 	var spotList = [];
+
+	// Check if new card has been drawn
+	var cardDrawn = false;
 	
 	function init()
 	{
@@ -98,28 +96,32 @@
 	
 	window.onload = init;
 
+	var board;
 	function loadSpots()
 	{
 		var geo = new THREE.CylinderGeometry( 8, 8, 1, 200 );
 		var largegeo = new THREE.CylinderGeometry( 27, 27, 1, 200 );
         
+        board = new THREE.Object3D;
+
         // Vertical spots
         for(var i = 0; i < 16; i++)
         {	
         	var mat = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
         	var circle1 = new THREE.Mesh( geo, mat );
-
         	circle1.position.set(174.5, .5, -115.5 + (PIECESPACE * i));
-        	circle1.name = "Spot"+i;
-        	scene.add(circle1);
+        	if(i < 10)
+        		circle1.name = "0" + i + "Spot";
+        	else
+        		circle1.name = i + "Spot";
+        	board.add(circle1);
         	spotList[i] = circle1;
 
         	var mat2 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
         	var circle2 = new THREE.Mesh( geo, mat2 );
-
         	circle2.position.set(-174.5, .5, 233.25 - (PIECESPACE * i));
-        	circle2.name = "Spot" + (i+30);
-        	scene.add(circle2);
+        	circle2.name = (i+30) + "Spot";
+        	board.add(circle2);
         	spotList[i+30] = circle2;
         }
 
@@ -129,15 +131,15 @@
         	var mat = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
         	var circle1 = new THREE.Mesh( geo, mat );
         	circle1.position.set(151.25 - (PIECESPACE * i), .5, 233.25);
-        	circle1.name = "Spot" + (i+16);
-        	scene.add(circle1);
+        	circle1.name = (i+16) + "Spot";
+        	board.add(circle1);
         	spotList[i+16] = circle1;
 
         	var mat1 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
-        	var circle2 = new THREE.Mesh( geo, mat );
+        	var circle2 = new THREE.Mesh( geo, mat1 );
         	circle2.position.set(-151.25 + (PIECESPACE * i), .5, -115.5);
-        	circle2.name = "Spot" + (i+46);
-        	scene.add(circle2);
+        	circle2.name = (i+46) + "Spot";
+        	board.add(circle2);
         	spotList[i+46] = circle2;
         }
 
@@ -147,29 +149,29 @@
         	var mat1 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
         	var circle = new THREE.Mesh( geo, mat1 );
         	circle.position.set(151.25 - (PIECESPACE * i), .5, -69);
-        	circle.name = "Spot" + (i+64);
-        	scene.add(circle);
+        	circle.name = (i+64) + "Spot";
+        	board.add(circle);
         	spotList[i+64] = circle;
 
         	var mat2 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
         	var circle1 = new THREE.Mesh( geo, mat2 );
         	circle1.position.set(128, .5, 210 - (PIECESPACE * i));
-        	circle1.name = "Spot" + (i+70);
-        	scene.add(circle1);
+        	circle1.name = (i+70) + "Spot";
+        	board.add(circle1);
         	spotList[i+70] = circle1;
 
         	var mat3 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
         	var circle2 = new THREE.Mesh( geo, mat3 );
         	circle2.position.set(-151.25 + (PIECESPACE * i), .5, 186.75);
-        	circle2.name = "Spot" + (i+76);
-        	scene.add(circle2);
+        	circle2.name = (i+76) + "Spot";
+        	board.add(circle2);
         	spotList[i+76] = circle2;
 
         	var mat4 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
 			var circle3 = new THREE.Mesh( geo, mat4 );
         	circle3.position.set(-127.75, .5, -92 + (PIECESPACE * i));
-        	circle3.name = "Spot" + (i+81);
-        	scene.add(circle3);
+        	circle3.name = (i+81) + "Spot";
+        	board.add(circle3);
         	spotList[i+81] = circle3;
         }
 
@@ -178,59 +180,61 @@
         var mat1 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
         var largecircle = new THREE.Mesh(largegeo, mat1);
     	largecircle.position.set( 134, .5, -22 );
-    	largecircle.name = "Spot60-Start";
-    	scene.add(largecircle);
+    	largecircle.name = "60Spot-Start";
+    	board.add(largecircle);
     	spotList[60] = largecircle;
 
     	var mat2 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
     	var largecircle1 = new THREE.Mesh(largegeo, mat2);
     	largecircle1.position.set( 82, .5, 193 );
-    	largecircle1.name = "Spot61-Start";
-    	scene.add(largecircle1);
+    	largecircle1.name = "61Spot-Start";
+    	board.add(largecircle1);
     	spotList[61] = largecircle1;
 
     	var mat3 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
     	var largecircle2 = new THREE.Mesh(largegeo, mat3);
     	largecircle2.position.set( -133, .5, 139.5 );
-    	largecircle2.name = "Spot62-Start";
-    	scene.add(largecircle2);
+    	largecircle2.name = "62Spot-Start";
+    	board.add(largecircle2);
     	spotList[62] = largecircle2;
 
     	var mat4 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
     	var largecircle3 = new THREE.Mesh(largegeo, mat4);
     	largecircle3.position.set( -81.5, 2, -73.5 );
-    	largecircle3.name = "Spot63-Start";
-    	scene.add(largecircle3);
+    	largecircle3.name = "63Spot-Start";
+    	board.add(largecircle3);
     	spotList[63] = largecircle3;
 
         // Initialize home zones
         var mat5 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
     	var largecircle = new THREE.Mesh(largegeo, mat5);
     	largecircle.position.set( 25, .5, -67.5 );
-    	largecircle.name = "Spot69-Home";
-    	scene.add(largecircle);
+    	largecircle.name = "69Spot-Home";
+    	board.add(largecircle);
     	spotList[69] = largecircle;
 
     	var mat6 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
     	var largecircle1 = new THREE.Mesh(largegeo, mat6);
     	largecircle1.position.set( 128, .5, 85 );
-    	largecircle1.name = "Spot75-Home";
-    	scene.add(largecircle1);
+    	largecircle1.name = "75Spot-Home";
+    	board.add(largecircle1);
     	spotList[75] = largecircle1;
 
     	var mat7 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
     	var largecircle2 = new THREE.Mesh(largegeo, mat7);
     	largecircle2.position.set( -24, .5, 185 );
-    	largecircle2.name = "Spot81-Home";
-    	scene.add(largecircle2);
+    	largecircle2.name = "81Spot-Home";
+    	board.add(largecircle2);
     	spotList[81] = largecircle2;
 
 		var mat8 = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
     	var largecircle3 = new THREE.Mesh(largegeo, mat8);
     	largecircle3.position.set( -127, .5, 35 );
-    	largecircle3.name = "Spot86-Home";
-    	scene.add(largecircle3);
+    	largecircle3.name = "86Spot-Home";
+    	board.add(largecircle3);
     	spotList[86] = largecircle3;
+
+    	scene.add(board);
 
 	}
 
@@ -443,22 +447,24 @@
 	{
 		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 		mouse.y = -( event.clientY / window.innerHeight ) * 2 + 1;
+
+		var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
+		projector.unprojectVector( vector, camera );
+		raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
 		
 		if( selectedobject != null )
 		{
-			var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
-			projector.unprojectVector( vector, camera );
-			raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
-		
-			var intersects = raycaster.intersectObject( plane );
-			selectedobject.position.copy( intersects[0].point );
+			var intersects2 = raycaster.intersectObject(plane);
+			selectedobject.position.copy( intersects2[0].point );
 		}
-		
 	}
 
 	var x,y,z;
+	var piece;
+	var noValidMoves = false;
 	function onDocumentMouseDown( event ) 
 	{	
+		if(cardDrawn == false)
 		// Prevent default action for mouse down
 		event.preventDefault();
 		
@@ -466,25 +472,27 @@
 		var vector = new THREE.Vector3( mouse.x, mouse.y, 1 );
 
 		// Uses camera projection matrix to transform into 3D space
-		projector.unprojectVector( vector, camera ); // ??? Shouldn't it automatically adapt to new camera position
-
+		projector.unprojectVector( vector, camera );
 		raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
-
 		var intersects = raycaster.intersectObjects( scene.children, true );
+
 		if ( intersects.length > 0 )
-		{				
+		{	
+			var pickedUp = false;
+
 			// Identify object being picked up
 			for( var i=0; i<intersects.length; i++ )
 			{
 				var obj = intersects[i].object;
 				var name = obj.name;
 
-			console.log(name)
-
 				if(name == 'Card Stack')
 				{
 					playMove();
 				}
+
+				// Return if card has not been drawn to prevent pieces moving
+				if(cardDrawn == false) return;
 
 				if( name.length == 0 )
 				{
@@ -501,18 +509,30 @@
 
 						// Get piece number from name
 						var str = name.substring( 0, 2 );
-						var piece = parseInt(str);
+						piece = parseInt(str);
 
+						// Original Spot
+						selectedSpot = piecePosition[piece];
+						console.log("piece " + piece + "located at" + piecePosition[piece])
 						getLegalMoves(piece);
+
 
 						// Change color of spots
 						for( var j = 0; j < movelist.length; j++ )
 						{	
-							console.log(movelist[j]);
+							//console.log(movelist[j]);
+							if(movelist[j] == -1)
+							{	
+								console.log('No Valid Moves');
+								noValidMoves = true;
+								break;
+							}
 							spotList[movelist[j]].material.transparent = false;
 							spotList[movelist[j]].material.color.set(0xff0000);
 						}
 
+
+						//break;
 						//check if on slide
 					}
 					else
@@ -520,26 +540,66 @@
 						obj = par;
 						selectedobject = obj;
 					}
+
+					pickedUp = true;
 					x = selectedobject.position.x;
 					y = selectedobject.position.y;
 					z = selectedobject.position.z;
-					return;
+					break;
 				}				
 			}	
 		}		
-
 	}
 
 	function onDocumentMouseUp( event ) 
 	{
 		event.preventDefault();
-		
-		if( selectedobject != null )
+
+		if (selectedobject == null)
+			return;
+
+		if(noValidMoves == true)
 		{
-			selectedobject.position.x = x;
-			selectedobject.position.y = y;
-			selectedobject.position.z = z;
+			snapSelectedPieceToSpot(selectedSpot);
+			cardDrawn = false;
 			selectedobject = null;
+			noValidMoves = false;
+			return;
+		}
+
+		var spot2 = -1;
+
+		var legalmovemade = false;
+		for(var i = 0; i<movelist.length; i++)
+		{	
+			// Legal move made
+			var position = spotList[movelist[i]].position;
+			var xrange = [position.x - 10, position.x + 10];
+			var zrange = [position.z - 10, position.z + 10];
+
+			if(selectedobject.position.x >= xrange[0] && selectedobject.position.x <= xrange[1])
+			{
+				if(selectedobject.position.z >= zrange[0] && selectedobject.position.z <= zrange[1])
+				{
+					legalmovemade = true;
+					snapSelectedPieceToSpot(movelist[i])
+					piecePosition[piece] = movelist[i];
+					cardDrawn = false;
+					console.log("piece " + piece + "now moved to spot" + piecePosition[piece]);
+				}
+			}
+
+			if( !legalmovemade )
+			{
+				snapSelectedPieceToSpot(selectedSpot);
+			}
+
+			selectedobject = null;
+			for(var i = 0; i < 87; i++)
+			{
+				spotList[i].material.transparent = true;
+				spotList[i].material.color.set("blue");
+			}
 		}
 	}
-	
+
