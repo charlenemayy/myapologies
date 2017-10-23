@@ -37,9 +37,12 @@
 		setupRenderer();
 		addSpotLight();
 		addPlane();
+		loadSounds();
+		createText();
 
 		// Output to the stream
 		document.body.appendChild( renderer.domElement );
+		document.addEventListener( 'keydown', onKeyDown, false );
 		
 		renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
 		renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
@@ -53,18 +56,22 @@
 		// Call render
 		render();
 	}
+
+	function onKeyDown(event)
+	{
+	  if(event.keyCode == 72){
+	    manageHelpPopUp();
+	  }
+
+	  if(event.keyCode == 65)
+	  {
+	    closeInfoPopUp();
+	  }
+	}
+
 	
 	function render()
 	{
-		if( Key.isDown(Key.A))
-		{
-			board.rotation.x -= 0.1;
-		}
-		if( Key.isDown(Key.D))
-		{
-			board.rotation.x += 0.1;
-		}
-		
 		// Request animation frame
 		requestAnimationFrame( render );
 		
@@ -92,6 +99,27 @@
 
         ambientlight = new THREE.AmbientLight(0xbababa);
         scene.add(ambientlight);
+	}
+
+	function createText()
+	{
+		var text = "Press H for Help";
+		var mat = new THREE.MeshLambertMaterial({color:'white'});
+		var geo = new THREE.TextGeometry( text, {
+	    	font: 'calibri',
+	        size: 20,
+	        height: .20,
+	        curveSegments: 20,
+	        bevelEnabled: false,
+	        bevelThickness: 5,
+	        bevelSize: 0
+	   	} );
+
+	   	var text = new THREE.Mesh( geo, mat );
+	   	scene.add(text);
+	   	 text.rotation.y= 180 * RAD;
+	   	 text.position.set(85, 15, 240);
+
 	}
 	
 	window.onload = init;
@@ -128,7 +156,7 @@
         // Horizontal spots
         for(var i = 0; i < 14; i++)
         {	
-        	var mat = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: .8});
+        	var mat = new THREE.MeshPhongMaterial({color: 'blue', transparent: true, opacity: 0.0});
         	var circle1 = new THREE.Mesh( geo, mat );
         	circle1.position.set(151.25 - (PIECESPACE * i), .5, 233.25);
         	circle1.name = (i+16) + "Spot";
@@ -370,9 +398,10 @@
 	}
 
 	function createCards()
-	{
+	{	
+		var texture = new THREE.ImageUtils.loadTexture("images/sorrycard.JPG");
 		var geo = new THREE.BoxGeometry( 30, 10, 50 );
-        var mat = new THREE.MeshPhongMaterial({color: 'blue'});
+        var mat = new THREE.MeshPhongMaterial({transparent: false, map: texture,opacity: 0.0});
         var cards = new THREE.Mesh( geo, mat );
 
         cards.position.set(39, 5, 21);
@@ -513,6 +542,13 @@
 
 						// Original Spot
 						selectedSpot = piecePosition[piece];
+
+						// Check if piece is at start
+						/*if(piecePosition[piece] >= 60 && piecePosition[piece] < 64)
+						{
+							selectedSpot = originalPosition[piece];
+						}*/
+
 						console.log("piece " + piece + "located at" + piecePosition[piece])
 						getLegalMoves(piece);
 
@@ -520,10 +556,8 @@
 						// Change color of spots
 						for( var j = 0; j < movelist.length; j++ )
 						{	
-							//console.log(movelist[j]);
 							if(movelist[j] == -1)
 							{	
-								console.log('No Valid Moves');
 								noValidMoves = true;
 								break;
 							}
@@ -601,5 +635,21 @@
 				spotList[i].material.color.set("blue");
 			}
 		}
+	}
+
+	var music, click;
+	function loadSounds()
+	{
+		music = new Audio("sounds/Bespin.mp3");
+		click = new Audio("sounds/click.mp3");
+		console.log('playing music');
+		music.addEventListener('ended', function() 
+		{
+			this.currentTime = 0;
+			this.play();
+		}, false);
+
+		music.volume = .3;
+		//music.play();
 	}
 

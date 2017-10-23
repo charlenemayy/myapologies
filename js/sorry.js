@@ -8,19 +8,21 @@
 
 // 45 cards total
 var cardValues = [1,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,
-		 5,5,5,5,7,7,7,7,8,8,8,8,10,10,10,10,
+		 5,5,5,5,8,8,8,8,10,10,10,10,
 		 11,11,11,11,12,12,12,12,13,13,13,13];
 
 var index = 0;
 var curMove;
+var header;
 
 	function playMove()
 	{	
 		cardDrawn = true;
 		console.log('card drawn');
+		manageInfoPopUp();
 
 		// Parses iteratively through shuffled list
-		if(index > 44)
+		if(index > 40)
 		{
 			console.log('End of stack... Re-stacking cards')
 
@@ -35,42 +37,38 @@ var curMove;
 		{	
 			// Implement skip move
 			case 1:
-				console.log('Move a pawn from Start, or move a pawn one space forward')
+				text = 'Move a pawn from Start, or move a pawn one space forward';
 				break;
 			case 2:
-				console.log('Move a pawn from Start, or move a pawn two spaces forward. DRAW AGAIN')
+				text = 'Move a pawn from Start, or move a pawn two spaces forward. DRAW AGAIN';
 				break;
 			case 3:
-				console.log('Move a pawn three spaces forward')
+				text = 'Move a pawn three spaces forward';
 				break;
 			case 4:
-				console.log('Move a pawn four spaces backward')
+				text = 'Move a pawn four spaces backward';
 				break;
 			case 5:
-				console.log('Move a pawn five spaces forward')
-			case 7:
-				console.log('Move one pawn seven spaces forward, or split the seven spaces between two pawns')
-				console.log('Ex. Move four spaces for one pawn, and three for another')
-				console.log('Cannot be used to move a pawn out of Start. The entire seven spaces must be used')
-				break;
+				text = 'Move a pawn five spaces forward';
 			case 8:
-				console.log('Move a pawn eight spaces forward')
+				text = 'Move a pawn eight spaces forward';
 				break;
 			case 10:
-				console.log('Move a pawn ten spaces forward or one space backward. If none of your pawns can move forward 10 spaces, you must move backward')
+				text = 'Move a pawn ten spaces forward or one space backward. If none of your pawns can move forward 10 spaces, you must move backward';
 				break;
 			case 11:
-				console.log('Move eleven spaces forward, or switch places with an opponents pawn.')
+				text = 'Move eleven spaces forward, or switch places with an opponents pawn.';
 				break;					
 			case 12:
-				console.log('Move a pawn 12 spaces forward')
+				text = 'Move a pawn 12 spaces forward';
 				break;
 			case 13:
-				console.log('Sorry!')
-				console.log('Take any one pawn from Start and move it to a square occupied by any opponents pawn and push it back to Start')
+				text = 'Sorry! \n Take any one pawn from Start and move it to a square occupied by any opponents pawn and push it back to Start';
 				break;
 		}
 
+		document.getElementById("header").innerHTML = "Card Drawn: " + curMove;
+		document.getElementById("text").innerHTML = text;
 		index++;
 	}
 
@@ -535,6 +533,16 @@ var curMove;
 			break;
 
 		}
+
+		if(movelist[0] == -1)
+		{	
+			console.log('hello')
+														header = '';
+								text = 'No valid moves for selected pawn';
+								document.getElementById("header").innerHTML = header;
+								document.getElementById("text").innerHTML = text;
+								manageInfoPopUp();
+		}
 	}
 
 	function snapSelectedPieceToSpot( square3 )
@@ -547,6 +555,6 @@ var curMove;
 		selectedobject.position.x = x;
 		selectedobject.position.z = z;
 
-		console.log(square3)
+		click.play();
 	}
 
